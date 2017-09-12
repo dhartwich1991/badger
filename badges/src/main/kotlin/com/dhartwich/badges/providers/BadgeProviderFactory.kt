@@ -4,39 +4,17 @@ import android.content.Context
 import com.dhartwich.badges.helpers.HomePackageFinder
 
 internal class BadgeProviderFactory(private val context: Context) {
-    private var providers: HashMap<String, BadgeProvider> = HashMap()
+    val provider: BadgeProvider = initializeProvider(homePackage())
 
-    init {
-        providers.apply {
-            put(SamsungBadgeProvider.HOME_PACKAGE, SamsungBadgeProvider(context))
-            put(HtcBadgeProvider.HOME_PACKAGE, HtcBadgeProvider(context))
-            put(LgBadgeProvider.HOME_PACKAGE, LgBadgeProvider(context))
-            put(SonyBadgeProvider.HOME_PACKAGE, SonyBadgeProvider(context))
+    private fun initializeProvider(launcherName: String): BadgeProvider {
+        return when (launcherName) {
+            SamsungBadgeProvider.HOME_PACKAGE -> SamsungBadgeProvider(context)
+            SonyBadgeProvider.HOME_PACKAGE -> SonyBadgeProvider(context)
+            HtcBadgeProvider.HOME_PACKAGE -> HtcBadgeProvider(context)
+            LgBadgeProvider.HOME_PACKAGE -> LgBadgeProvider(context)
+            else -> DefaultBadgeProvider()
         }
     }
 
-    fun getBadgeProvider(): BadgeProvider? {
-        val currentPackage = homePackage(context)
-
-        if (providers.containsKey(currentPackage)) {
-            return providers[currentPackage]
-        }
-
-        return EmptyBadgeProvider()
-    }
-
-    private fun homePackage(context: Context): String = HomePackageFinder().findHomePackage(context)
-}
-
-class EmptyBadgeProvider : BadgeProvider {
-    override fun showBadge(count: Int) {
-    }
-
-    override fun removeBadges() {
-    }
-
-    override fun packageName(): String = ""
-
-    override fun mainActivityClassName(): String = ""
-
+    private fun homePackage(): String = HomePackageFinder().findHomePackage(context)
 }

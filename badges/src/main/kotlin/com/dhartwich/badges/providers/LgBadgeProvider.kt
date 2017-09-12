@@ -3,6 +3,10 @@ package com.dhartwich.badges.providers
 import android.content.Context
 import android.content.Intent
 
+private const val ACTION = "android.intent.action.BADGE_COUNT_UPDATE"
+private const val BADGE_PACKAGE_NAME = "badge_count_package_name"
+private const val BADGE_CLASS_NAME = "badge_count_class_name"
+private const val BADGE_COUNT = "badge_count"
 
 internal class LgBadgeProvider(private val context: Context) : BadgeProvider {
     companion object {
@@ -10,10 +14,11 @@ internal class LgBadgeProvider(private val context: Context) : BadgeProvider {
     }
 
     override fun showBadge(count: Int) {
-        val intent = Intent("android.intent.action.BADGE_COUNT_UPDATE")
-        intent.putExtra("badge_count_package_name", packageName())
-        intent.putExtra("badge_count_class_name", mainActivityClassName())
-        intent.putExtra("badge_count", count)
+        val intent = Intent(ACTION).apply {
+            putExtra(BADGE_PACKAGE_NAME, packageName())
+            putExtra(BADGE_CLASS_NAME, mainActivityClassName())
+            putExtra(BADGE_COUNT, count)
+        }
 
         context.sendBroadcast(intent)
     }
