@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">badges</string>
+    <string name="title_activity_sample">Badge Activity</string>
+    <string name="delete_badges">Delete Badges</string>
+    <string name="show_badges">Show Badges</string>
+</resources>
